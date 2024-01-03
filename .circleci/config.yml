@@ -12,9 +12,9 @@ jobs:
           command: |
             version="build-$CIRCLE_BUILD_NUM"
             echo $version
-            docker build -t agrocd-demo/todo-app:$version .
+            docker build -t surendhiran/todo-app:$version .
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker push agrocd-demo/todo-app:$version
+            docker push surendhiran/todo-app:$version
 
   Update_menifest:
     docker:
