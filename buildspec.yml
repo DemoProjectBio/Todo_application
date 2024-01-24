@@ -1,0 +1,27 @@
+version: 0.2
+
+env:
+    variables:
+    CONTAINER_REPOSITORY_URL: public.ecr.aws/j7d7r0r8/ecs-demo
+    TAG_NAME: latest
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+
+pre_build:
+  commands:
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $CONTAINER_REPOSITORY_URL
+    - docker build -t to_do_app .
+    - #docker pull $CONTAINER_REPOSITORY_URL:$TAG_NAME || true
+
+build:
+  commands:
+    - #cd ./al2/x86_64/standard/1.0
+    - #docker build --cache-from $CONTAINER_REPOSITORY_URL:$TAG_NAME --tag
+$CONTAINER_REPOSITORY_URL:$TAG_NAME .
+
+post_build:
+    commands:
+      - #docker push $CONTAINER_REPOSITORY_URL
