@@ -1,26 +1,58 @@
 version: 0.2
 
-env:
-    variables:
-    CONTAINER_REPOSITORY_URL: public.ecr.aws/j7d7r0r8/ecs-demo
-    TAG_NAME: latest
-
+#env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+#batch:
+  #fast-fail: true
+  #build-list:
+  #build-matrix:
+  #build-graph:
 phases:
-  install:
-    runtime-versions:
-      docker: 19
-
-pre_build:
-  commands:
-    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $CONTAINER_REPOSITORY_URL
-    - docker build -t to_do_app .
-    - #docker pull $CONTAINER_REPOSITORY_URL:$TAG_NAME || true
-
-build:
-  commands:
-    - #cd ./al2/x86_64/standard/1.0
-    - #docker build --cache-from $CONTAINER_REPOSITORY_URL:$TAG_NAME --tag
-
-post_build:
+  #install:
+    #runtime-versions:
+      # name: version
+      # name: version
+    #commands:
+      # - command
+      # - command
+  #pre_build:
+    #commands:
+      # - command
+      # - command
+  build:
     commands:
-      - #docker push $CONTAINER_REPOSITORY_URL
+      - ./.circleci/codebuild_deploy.sh dev
+  #post_build:
+    #commands:
+      # - command
+      # - command
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
