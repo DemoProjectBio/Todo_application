@@ -149,7 +149,7 @@ main(){
 
     echo "Docker artifactory URL:$artifactory_repo_url"
 
-    push_docker_image_to_artifactory $DOCKER_IMAGE_NAME $artifactory_repo_url $SHORT_COMMIT_HASH $VERSION_TAG $RELEASE_BRANCH $RELEASE_TAG $PACKAGE_VERSION
+    push_docker_image_to_ecr $DOCKER_IMAGE_NAME $artifactory_repo_url $SHORT_COMMIT_HASH $VERSION_TAG $RELEASE_BRANCH $RELEASE_TAG $PACKAGE_VERSION
   else
     CURRENT_IMAGE_REPO_URL=$2
     SHORT_COMMIT_HASH=$3
