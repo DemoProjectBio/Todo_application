@@ -141,6 +141,7 @@ register_new_task_definition() {
   TASK_REVISON_ARN=$(aws ecs register-task-definition \
                       --container-definitions "$new_task_def" \
                       --family $1 \
+                      --network-mode awsvpc \
                       --task-role-arn $task_role_arn \
                       --execution-role-arn $execution_role_arn \
                       --requires-compatibilities FARGATE \
