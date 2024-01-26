@@ -96,16 +96,16 @@ push_docker_image(){
   docker_tag "$1:latest" "$2:latest"
   docker_tag "$1:latest" "$2:$3"
   docker_tag "$1:latest" "$2:$4"
-  [ ! -z "$5" ] && docker_tag "$1:latest" "$2:$5"
-  [ ! -z "$6" ] && docker_tag "$1:latest" "$2:$6"
-  [ ! -z "$7" ] && docker_tag "$1:latest" "$2:$7"
+  #[ ! -z "$5" ] && docker_tag "$1:latest" "$2:$5"
+  #[ ! -z "$6" ] && docker_tag "$1:latest" "$2:$6"
+  #[ ! -z "$7" ] && docker_tag "$1:latest" "$2:$7"
 
   docker_push "$2:latest"
   docker_push "$2:$3"
   docker_push "$2:$4"
-  [ ! -z "$5" ] && docker_push "$2:$5"
-  [ ! -z "$6" ] && docker_push "$2:$6"
-  [ ! -z "$7" ] && docker_push "$2:$7"
+  #[ ! -z "$5" ] && docker_push "$2:$5"
+  #[ ! -z "$6" ] && docker_push "$2:$6"
+  #[ ! -z "$7" ] && docker_push "$2:$7"
  
 }
 push_docker_image_to_ecr(){
@@ -113,6 +113,55 @@ push_docker_image_to_ecr(){
   push_docker_image "$@"
 }
 
+
+register_new_task_definition() {
+  if [ $# != 4 ] ; then
+    echo "Task family,current repo url,commit hash,task definition required."
+    exit 1;
+  fi
+  local new_image=$2:$3
+  local jq_replace_image_str=$(echo ".[0].image=\"$new_image\"")
+
+  echo "Creating new task definition with $new_image for family $1"
+  new_task_def=$(echo $4 \
+                | $JQ '.taskDefinition.containerDefinitions' \
+                | $JQ $jq_replace_image_str )
+
+  task_role_arn=$(echo $4 \
+                | $JQ '.taskDefinition.taskRoleArn')
+  
+  execution_role_arn=$(echo $4 \
+                | $JQ '.taskDefinition.executionRoleArn')
+
+  if [ -z $execution_role_arn ]; then
+    echo "executionRoleArn not found. Cannot deploy from private repository without executionRoleArn"
+    exit 0;
+  fi
+
+  TASK_REVISON_ARN=$(aws ecs register-task-definition \
+                      --container-definitions "$new_task_def" \
+                      --family $1 \
+                      --task-role-arn $task_role_arn \
+                      --execution-role-arn $execution_role_arn \
+                      | $JQ '.taskDefinition.taskDefinitionArn')
+
+  echo "New task registered:$TASK_REVISON_ARN"
+}
+
+update_service() {
+  if [ $# != 3 ] ; then
+      echo "Cluster name, service name, task definition revision arn required"
+      exit 1;
+  fi
+
+  echo "Updating service in cluster $1 and service $2 with $3"
+  if [[ $(aws ecs update-service --cluster $1 \
+                --service $2 \
+                --task-definition $3 | \
+        $JQ '.service.taskDefinition') != $3 ]]; then
+        return 1
+  fi
+}
 
 main(){
   if [ -z $1 ]; then
