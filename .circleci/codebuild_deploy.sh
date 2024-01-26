@@ -145,7 +145,7 @@ register_new_task_definition() {
                       --execution-role-arn $execution_role_arn \
                       --network-mode awsvpc \
                       --requires-compatibilities FARGATE \
-                      --cpu 2048 \
+                      --cpu 1024 \
                       --memory 2048 \
                       | $JQ '.taskDefinition.taskDefinitionArn')
 
