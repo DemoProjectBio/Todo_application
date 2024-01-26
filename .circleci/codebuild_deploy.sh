@@ -143,6 +143,7 @@ register_new_task_definition() {
                       --family $1 \
                       --task-role-arn $task_role_arn \
                       --execution-role-arn $execution_role_arn \
+                      --requires-compatibilities FARGATE \
                       | $JQ '.taskDefinition.taskDefinitionArn')
 
   echo "New task registered:$TASK_REVISON_ARN"
