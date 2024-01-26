@@ -145,8 +145,8 @@ register_new_task_definition() {
                       --execution-role-arn $execution_role_arn \
                       --network-mode awsvpc \
                       --requires-compatibilities FARGATE \
-                      --cpu 0.5 \
-                      --memory 512 \
+                      --cpu 2048 \
+                      --memory 2048 \
                       | $JQ '.taskDefinition.taskDefinitionArn')
 
   echo "New task registered:$TASK_REVISON_ARN"
