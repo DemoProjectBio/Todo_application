@@ -145,8 +145,8 @@ register_new_task_definition() {
                       --execution-role-arn $execution_role_arn \
                       --network-mode awsvpc \
                       --requires-compatibilities FARGATE \
-                      --cpu 512
-                      --memory 512
+                      --cpu 512 \
+                      --memory 512 \
                       | $JQ '.taskDefinition.taskDefinitionArn')
 
   echo "New task registered:$TASK_REVISON_ARN"
@@ -161,8 +161,8 @@ update_service() {
   echo "Updating service in cluster $1 and service $2 with $3"
   if [[ $(aws ecs update-service --cluster $1 \
                 --service $2 \
-                --task-definition $3 | \
-        $JQ '.service.taskDefinition') != $3 ]]; then
+                --task-definition $3 \
+                | $JQ '.service.taskDefinition') != $3 ]]; then
         return 1
   fi
 }
