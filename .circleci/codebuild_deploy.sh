@@ -145,7 +145,7 @@ main(){
   if [ $1 == "dev" ] || [ $1 == "dr" ]; then
     generate_tags
     
-    artifactory_repo_url=095014417075.dkr.ecr.us-east-1.amazonaws.com
+    artifactory_repo_url=095014417075.dkr.ecr.us-east-1.amazonaws.com/$DOCKER_IMAGE_NAME
 
     echo "Docker artifactory URL:$artifactory_repo_url"
 
