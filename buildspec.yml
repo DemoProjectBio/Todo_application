@@ -33,6 +33,7 @@ phases:
       # - command
   build:
     commands:
+      - chmod -R +x ./.circleci
       - ./.circleci/codebuild_deploy.sh dev
   #post_build:
     #commands:
